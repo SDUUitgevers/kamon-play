@@ -84,6 +84,7 @@ lazy val kamonPlay25 = Project("kamon-play-25", file("kamon-play-2.5.x"))
 
 lazy val kamonPlay26 = Project("kamon-play-26", file("kamon-play-2.6.x"))
   .enablePlugins(JavaAgent)
+  .settings(noPublishing: _*)
   .settings(Seq(
     bintrayPackage := "kamon-play",
     moduleName := "kamon-play-2.6",

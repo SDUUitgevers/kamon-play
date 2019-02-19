@@ -16,7 +16,6 @@
 package kamon.play.instrumentation
 
 import kamon.Kamon
-import kamon.context.Context
 import kamon.trace.Span
 import kamon.util.CallingThreadExecutionContext
 
@@ -27,6 +26,11 @@ trait GenericRequest {
   val method: String
   val url: String
   val component: String
+  lazy val clientIp : String = {
+    getHeader("X-Forwarded-For").flatMap(_.split(", ").headOption).orElse(
+      getHeader("Remote-Address").orElse(
+        getHeader("X-Real-Ip"))).getOrElse("Unknown").takeWhile(_ != ':')
+  }
 }
 
 trait GenericResponse {
@@ -48,6 +52,7 @@ object RequestHandlerInstrumentation {
       .withMetricTag("component", request.component)
       .withMetricTag("http.method", request.method)
       .withTag("http.url", request.url)
+      .withTag("http.clientIp", request.clientIp)
       .start()
 
     val responseFuture = Kamon.withContext(incomingContext.withKey(Span.ContextKey, serverSpan))(responseInvocation)
