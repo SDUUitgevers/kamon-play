@@ -235,7 +235,6 @@ abstract class RequestHandlerInstrumentationSpec extends PlaySpec with GuiceOneS
         span.operationName mustBe "GET:/error"
         span.tags("span.kind") mustBe TagValue.String("server")
         span.tags("http.method") mustBe TagValue.String("GET")
-        span.tags("error") mustBe TagValue.True
         span.tags("http.status_code") mustBe TagValue.Number(500)
       }
     }
